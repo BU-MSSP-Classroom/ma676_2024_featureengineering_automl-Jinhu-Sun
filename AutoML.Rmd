@@ -328,8 +328,9 @@ You will use the framework of tidymodel workflow, which will run these transform
 
 Since you've worked on it in MA679 please copy and paste your best model here.  
 ```{r,echo=TRUE}
-##
-##
+lmfit_2008<- lm(log(SalePrice) ~ `Year Built`+`Year Remod/Add`+`Gr Liv Area`+`Full Bath`+`Half Bath`+`Bedroom AbvGr`+ `Garage Area`, data = ames_raw_2008)
+
+summary(lmfit_2008)
 ```
 
 Your answer:
@@ -343,8 +344,26 @@ Please write your answer in full sentences.
 Please perform feature engineering on the Ames housing data that you think will help with the prediction.
 
 ```{r,echo=TRUE}
-##
-##
+library(mice)
+
+variables <- c("SalePrice", "Year Built", "Year Remod/Add", "Gr Liv Area", "Full Bath", "Half Bath", "Bedroom AbvGr", "Garage Area")
+selected_data <- ames_raw_2008[variables]
+
+md.pattern(selected_data)
+
+library(ggplot2)
+
+long_data <- reshape2::melt(selected_data)
+
+# Plotting using ggplot2 with facets
+ggplot(long_data, aes(x=value)) + 
+  geom_histogram(bins=30, fill="blue", color="black") + 
+  facet_wrap(~ variable, scales="free_x") + 
+  theme_minimal() +
+  labs(x="Value", y="Count") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
 ```
 
 Your answer:
@@ -358,8 +377,9 @@ Please write your answer in full sentences.
 Compare the result before and after the feature engineering step.
 
 ```{r,echo=TRUE}
-##
-##
+lmfit_2008<- lm(log(SalePrice) ~ `Year Built`+`Year Remod/Add`+log(`Gr Liv Area`)+`Full Bath`+`Half Bath`+`Bedroom AbvGr`+ `Garage Area`, data = ames_raw_2008)
+
+summary(lmfit_2008)
 ```
 
 
